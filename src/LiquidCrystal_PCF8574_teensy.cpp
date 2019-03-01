@@ -12,13 +12,15 @@
 ///
 /// ChangeLog see: LiquidCrystal_PCF8574.h
 
-#include "LiquidCrystal_PCF8574.h"
+#include "LiquidCrystal_PCF8574_teensy.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
 #include "Arduino.h"
-#include <Wire.h>
+//#include <Wire.h>
+#include <i2c_t3.h>
+// Use the i2c_t3 library instead of Wire (only works with Teensy 3.x
 
 /// Definitions on how the PCF8574 is connected to the LCD
 
@@ -232,6 +234,38 @@ inline size_t LiquidCrystal_PCF8574::write(uint8_t value) {
   _send(value, RSMODE_DATA);
   return 1; // assume sucess
 }
+
+
+// Teensy 3.x only
+// Set Default Timeout - sets the default timeout to be applied to all functions called with a timeout of
+//                       zero (the default in cases where timeout is not specified).  The default is
+//                       initially zero (infinite wait).
+// return: none
+// parameters:
+//      timeout = timeout in microseconds
+void LiquidCrystal_PCF8574::setDefaultTimeout(uint32_t timeout) {
+  Wire.setDefaultTimeout(timeout);
+}
+
+
+// Teensy 3.x only
+// Reset Bus - toggles SCL until SDA line is released (9 clocks max).  This is used to correct
+//             a hung bus in which a Slave device missed some clocks and remains stuck outputting
+//             a low signal on SDA (thereby preventing START/STOP signaling).
+// return: none
+void LiquidCrystal_PCF8574::resetBus(void) {
+  Wire.resetBus();
+}
+
+
+// Teensy 3.x only
+// Get Wire Error - returns "Wire" error code from a failed Tx/Rx command
+// return: 0=success, 1=data too long, 2=recv addr NACK, 3=recv data NACK, 4=other error
+uint8_t LiquidCrystal_PCF8574::getError(void) {
+  return Wire.getError();
+}
+
+
 
 /* ----- low level functions ----- */
 
