@@ -31,7 +31,7 @@
 /// --------
 /// * 19.10.2013 created.
 /// * 24.05.2015 Arduino Library Manager compatible.
-
+/// * 01.03.2019 Changed Wire library out in favor for i2c_t3 and added some timeout and reset functions (Teensy 3.x only)
 
 
 #ifndef LiquidCrystal_PCF8574_h
@@ -108,6 +108,12 @@ public:
   virtual size_t write(uint8_t);
   using Print::write;
 
+  // Added for Teensy 3.x
+  void setDefaultTimeout(uint32_t timeout);
+  void resetBus();
+  uint8_t getError();
+  
+  
 private:
   // low level functions
   void _command(uint8_t);
